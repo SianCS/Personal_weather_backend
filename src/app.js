@@ -7,8 +7,10 @@ import cityRoute from './routes/city.route.js'
 import error from './utils/error.js'
 import { notFound } from './utils/notfound.js'
 import { apiLimiter, authLimiter } from './utils/limiter.js'
+import helmet from 'helmet'
 
 const app = express()
+app.use(helmet())
 
 app.use(express.json())
 app.use(cors({
