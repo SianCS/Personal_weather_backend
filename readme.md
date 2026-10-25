@@ -2,9 +2,12 @@
 
 REST API for WeatherVista, a weather dashboard with city search, map-based lookups, favorites and a 5-day forecast. It wraps the OpenWeatherMap API and caches responses in MySQL to keep the app fast and reduce external API calls.
 
-> Frontend (React + Vite): [SianCS/Personal_weather_fornted](https://github.com/SianCS/Personal_weather_fornted)
+**Live demo:** https://weathervista-sage.vercel.app · **API:** https://weathervista-api.onrender.com/api/weather?city=Bangkok
+> Hosted on Render (free tier, sleeps when idle — the first request may take up to a minute) with MySQL on Aiven.
 
-![Dashboard](https://raw.githubusercontent.com/SianCS/Personal_weather_fornted/main/docs/dashboard.png)
+> Frontend (React + Vite): [SianCS/Personal_weather_frontend](https://github.com/SianCS/Personal_weather_frontend)
+
+![Dashboard](https://raw.githubusercontent.com/SianCS/Personal_weather_frontend/main/docs/dashboard.png)
 
 ## Tech Stack
 
