@@ -1,29 +1,26 @@
 import { object, ref, string } from "yup";
 
 export const registerSchema = object({
-  email: string().email("Email Worng").required("Put your Email"),
-  password: string().min(6, "Need more than 6"),
+  email: string().email("Invalid email format").required("Email is required"),
+  password: string().min(6, "Password must be at least 6 characters").required("Password is required"),
   confirmPassword: string().oneOf(
     [ref("password"), null],
-    "Password not Match"
+    "Passwords do not match"
   ),
 });
 
 export const loginSchema = object({
-  email: string().email("Email Worng").required("Put your Email"),
-  password: string().min(6, "Need more than 6"),
+  email: string().email("Invalid email format").required("Email is required"),
+  password: string().min(6, "Password must be at least 6 characters").required("Password is required"),
 });
 
 export const validate = (schema) => async (req, res, next) => {
-  // code body
   try {
     await schema.validate(req.body, { abortEarly: false });
     next();
   } catch (error) {
-    const errMsg = error.errors.map((item) => item);
-    const errTxt = errMsg.join(",");
-    console.log(errTxt);
-    const mergeErr = new Error(errTxt);
+    const mergeErr = new Error(error.errors.join(","));
+    mergeErr.statusCode = 400;
     next(mergeErr);
   }
 };

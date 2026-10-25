@@ -1,7 +1,6 @@
 import express from "express";
-// 🔽 1. Import services และ middlewares ที่จำเป็น
 import { getCurrentWeatherByCityName, getFiveDayForecastByCityId, getWeatherByCoords } from "../services/weather.service.js";
-import { createError } from "../utils/createError.js"; // 🔽 Import createError
+import { createError } from "../utils/createError.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const weatherRouter = express.Router();
@@ -11,12 +10,10 @@ const weatherRouter = express.Router();
  * @desc    ดึงข้อมูลอากาศล่าสุดของเมือง (มีระบบ Cache)
  * @access  Public
  */
-// 🔽 2. เพิ่ม next เป็นพารามิเตอร์
 weatherRouter.get("/", async (req, res, next) => {
   const { city: cityName } = req.query;
 
   if (!cityName?.trim()) {
-    // 🔽 ใช้ createError และส่งต่อด้วย next
     return next(createError(400, "City name is required"));
   }
 
@@ -25,7 +22,6 @@ weatherRouter.get("/", async (req, res, next) => {
     const weatherData = await getCurrentWeatherByCityName(cityName);
     return res.json(weatherData);
   } catch (err) {
-    // 🔽 3. ส่ง Error ทั้งหมดต่อไปให้ error middleware จัดการ
     next(err);
   }
 });
@@ -33,13 +29,12 @@ weatherRouter.get("/", async (req, res, next) => {
 /**
  * @route   GET /api/weather/:cityId/forecast
  * @desc    ดึงข้อมูลพยากรณ์อากาศล่วงหน้า 5 วัน
- * @access  Public
+ * @access  Private
  */
 weatherRouter.get("/:cityId/forecast",authMiddleware , async (req, res, next) => {
   const cityId = parseInt(req.params.cityId, 10);
 
   if (isNaN(cityId)) {
-    // 🔽 ใช้ createError และส่งต่อด้วย next
     return next(createError(400, "Invalid city ID"));
   }
 
@@ -48,7 +43,6 @@ weatherRouter.get("/:cityId/forecast",authMiddleware , async (req, res, next) =>
     const forecastData = await getFiveDayForecastByCityId(cityId);
     return res.json(forecastData);
   } catch (err) {
-    // 🔽 ส่ง Error ทั้งหมดต่อไปให้ error middleware จัดการ
     next(err);
   }
 });
@@ -76,7 +70,6 @@ weatherRouter.get("/by-coords", async (req, res, next) => {
     const weatherData = await getWeatherByCoords(latitude, longitude);
     return res.json(weatherData);
   } catch (err) {
-    // 🔽 3. ส่ง Error ต่อไปให้ middleware จัดการ
     next(err);
   }
 });

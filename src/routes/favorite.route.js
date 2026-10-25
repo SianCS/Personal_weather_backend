@@ -2,10 +2,7 @@ import express from "express";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { createError } from "../utils/createError.js";
 
-// 🔽 1. Import services ที่จะใช้
-// 🔽 ใช้ฟังก์ชันค้นหาอย่างเดียว ไม่สร้างเมืองใหม่
-import { findCityByNameInDB } from "../services/weather.service.js"; 
-import { 
+import {
   addFavorite, 
   getFavoritesByUserId, 
   updateFavoriteName, 
@@ -16,7 +13,6 @@ const favoriteRoute = express.Router();
 
 favoriteRoute.post("/", authMiddleware, async (req, res, next) => {
   
-  // ✨ HIGHLIGHT: รับข้อมูลได้ทั้ง cityId และ cityName
   const { cityId, cityName, favoriteName } = req.body;
 
   // ตรวจสอบว่ามีข้อมูลที่จำเป็นส่งมาหรือไม่
@@ -24,9 +20,14 @@ favoriteRoute.post("/", authMiddleware, async (req, res, next) => {
     return next(createError(400, "Either cityId or cityName is required."));
   }
 
+  // cityId อาจถูกส่งมาเป็น string ต้องแปลงเป็นตัวเลขก่อนส่งให้ Prisma
+  const parsedCityId = cityId ? Number(cityId) : null;
+  if (cityId && !Number.isInteger(parsedCityId)) {
+    return next(createError(400, "Invalid city ID"));
+  }
+
   try {
-    // ✨ HIGHLIGHT: ส่งข้อมูลเมืองไปให้ Service ในรูปแบบ object
-    const cityInfo = cityId ? { cityId } : { cityName };
+    const cityInfo = parsedCityId ? { cityId: parsedCityId } : { cityName };
     const newFavorite = await addFavorite(req.user.userId, cityInfo, favoriteName);
 
     res.status(201).json({ message: "Added to favorites", favorite: newFavorite });
@@ -36,7 +37,7 @@ favoriteRoute.post("/", authMiddleware, async (req, res, next) => {
 });
 
 
-// ✅ GET /favorites - ดึงรายการโปรดทั้งหมด
+// GET /favorites - ดึงรายการโปรดทั้งหมด
 favoriteRoute.get("/", authMiddleware, async (req, res, next) => {
   try {
     const favorites = await getFavoritesByUserId(req.user.userId);
@@ -46,7 +47,7 @@ favoriteRoute.get("/", authMiddleware, async (req, res, next) => {
   }
 });
 
-// ✅ PATCH /favorites/:id - แก้ไขชื่อ favorite
+// PATCH /favorites/:id - แก้ไขชื่อ favorite
 favoriteRoute.patch("/:id", authMiddleware, async (req, res, next) => {
   const favoriteId = parseInt(req.params.id);
   const { favoriteName } = req.body;
@@ -63,7 +64,7 @@ favoriteRoute.patch("/:id", authMiddleware, async (req, res, next) => {
   }
 });
 
-// ✅ DELETE /favorites/:id - ลบรายการโปรด
+// DELETE /favorites/:id - ลบรายการโปรด
 favoriteRoute.delete("/:id", authMiddleware, async (req, res, next) => {
   const favoriteId = parseInt(req.params.id);
 

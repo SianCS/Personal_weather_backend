@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import prisma from "../config/prisma.config.js";
-// 🔽 1. Import ฟังก์ชัน createError ที่คุณสร้างขึ้น
 import { createError } from "../utils/createError.js";
 
 /**
@@ -18,7 +17,6 @@ export async function registerUser(email, password) {
   });
 
   if (existingUser) {
-    // 🔽 2. เรียกใช้ createError เพื่อโยนข้อผิดพลาด
     createError(409, "Email is already in use"); // 409 Conflict
   }
 
@@ -52,14 +50,12 @@ export async function loginUser(email, password) {
   });
 
   if (!user) {
-    // 🔽 เรียกใช้ createError เพื่อโยนข้อผิดพลาด
     createError(401, "Invalid email or password"); // 401 Unauthorized
   }
 
   // 2. เปรียบเทียบรหัสผ่าน
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    // 🔽 เรียกใช้ createError เพื่อโยนข้อผิดพลาด
     createError(401, "Invalid email or password");
   }
 

@@ -1,5 +1,5 @@
-export const createError = (code, message) => {
+export const createError = (statusCode, message) => {
   const error = new Error(message);
-  error.code = code;
+  error.statusCode = statusCode;
   throw error;
 };

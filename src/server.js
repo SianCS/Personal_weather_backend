@@ -1,8 +1,7 @@
+import 'dotenv/config'
 import app from "./app.js"
 import shutdown from './utils/shutdown.util.js'
-import dotenv from 'dotenv'
 
-dotenv.config()
 
 
 
@@ -14,5 +13,5 @@ app.listen(PORT , ()=> console.log(`Server Running on:`, PORT))
 process.on("SIGINT", ()=>	shutdown('SIGINT'))
 process.on("SIGTERM", ()=>	shutdown('SIGTERM'))
 
-process.on("uncaughtException", ()=>	shutdown('uncaughtException'))
-process.on("unhandledRejection", ()=>	shutdown('unhandledRejection'))
+process.on("uncaughtException", (err)=>	shutdown('uncaughtException', err))
+process.on("unhandledRejection", (reason)=>	shutdown('unhandledRejection', reason))

@@ -6,13 +6,14 @@ export const apiLimiter = rateLimit({
   max : 200,
   standardHeaders : true,
   legacyHeaders :false,
-  message: { error: "Too many requests, please try again after 15 minutes." }
+  message: { message: "Too many requests, please try again after 15 minutes." }
 })
 
+// จำกัดเข้มกว่าเพื่อกันการเดารหัสผ่าน
 export const authLimiter = rateLimit({
   windowMs : 10 * 60 * 1000,
-  max : 200,
+  max : 20,
   standardHeaders : true,
   legacyHeaders :false,
-  message: { error: "Too many requests, please try again after 10 minutes." }
+  message: { message: "Too many requests, please try again after 10 minutes." }
 })

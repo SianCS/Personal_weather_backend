@@ -1,7 +1,6 @@
 import prisma from "../config/prisma.config.js";
 import { createError } from "../utils/createError.js";
-// 🔽 ไม่จำเป็นต้อง import getOrCreateCity ในไฟล์นี้แล้ว
-// import { getOrCreateCity } from "./weather.service.js";
+import { getOrCreateCity } from "./weather.service.js";
 
 /**
  * ดึงรายการเมืองโปรดทั้งหมดของผู้ใช้
@@ -26,9 +25,9 @@ export async function getFavoritesByUserId(userId) {
 }
 
 /**
- * ✅ แก้ไข: เปลี่ยนชื่อฟังก์ชันและพารามิเตอร์ให้รับ cityId โดยตรง
+ * เพิ่มเมืองโปรด (รับได้ทั้ง cityId หรือ cityName)
  * @param {number} userId - ID ของผู้ใช้
- * @param {number} cityId - ID ของเมืองที่ต้องการเพิ่ม
+ * @param {{cityId?: number, cityName?: string}} cityInfo - เมืองที่ต้องการเพิ่ม
  * @param {string | null} favoriteName - ชื่อเล่นที่ผู้ใช้ตั้ง
  * @returns {Promise<object>} ข้อมูล favorite ที่สร้างขึ้นใหม่
  */
